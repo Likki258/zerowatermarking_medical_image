@@ -1,0 +1,13 @@
+opencv-python
+numpy
+scikit-image
+torch
+torchvision
+qrcode
+streamlit
+matplotlib
+Pillow
+flask
+web3
+cryptography
+pyzbar

@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #0066A1;
+  --primary-light: #4A90E2;
+  --accent: #26C6DA;
+  --blockchain: #7B68EE;
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --danger: #EF4444;
+  --bg-dark: #0A0F18;
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-dark);
+  color: #FFFFFF;
+  -webkit-font-smoothing: antialiased;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(74, 144, 226, 0.3);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #FFF 0%, #4A90E2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

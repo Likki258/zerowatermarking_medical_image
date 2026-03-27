@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div style="margin-bottom: 2rem;">
+            <p style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 1rem; padding-left: 1rem;">Main Menu</p>
+            <a href="/dashboard" class="sidebar-link active"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="/register" class="sidebar-link"><i class="fas fa-camera"></i> Register</a>
+            <a href="/verify" class="sidebar-link"><i class="fas fa-search"></i> Verify</a>
+            <a href="/history" class="sidebar-link"><i class="fas fa-clipboard-list"></i> History</a>
+        </div>
+        
+        <div style="margin-bottom: 2rem;">
+            <p style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 1rem; padding-left: 1rem;">Network</p>
+            <a href="/explorer" class="sidebar-link"><i class="fas fa-link"></i> Blockchain</a>
+            <a href="/federated" class="sidebar-link"><i class="fas fa-network-wired"></i> Federated</a>
+        </div>
+
+        <div style="margin-top: auto;">
+            <a href="#" class="sidebar-link"><i class="fas fa-cog"></i> Settings</a>
+            <a href="#" class="sidebar-link" style="color: var(--danger);"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div style="padding: 2.5rem; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+            <div>
+                <h1 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Welcome back, <span style="color: var(--primary-light);">City General</span></h1>
+                <p style="color: var(--text-muted);">Here's your institutional activity for today.</p>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-weight: 600;">Dr. Smith</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Chief of Radiology</div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 3rem;">
+            <div class="stat-card">
+                <div class="stat-label">Images Today</div>
+                <div class="stat-value">24</div>
+                <div style="font-size: 0.7rem; color: var(--success);"><i class="fas fa-arrow-up"></i> 12% from yesterday</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending Verifs</div>
+                <div class="stat-value" style="color: var(--warning);">3</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">Action required</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Security Alerts</div>
+                <div class="stat-value" style="color: var(--danger);">2</div>
+                <div style="font-size: 0.7rem; color: var(--danger);">High priority</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Storage Usage</div>
+                <div class="stat-value">64%</div>
+                <div style="height: 4px; background: var(--glass-border); border-radius: 2px; margin-top: 0.5rem;">
+                    <div style="width: 64%; height: 100%; background: var(--accent); border-radius: 2px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem;">
+            <!-- Recent Registrations -->
+            <div class="glass-card" style="padding: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.1rem;">Recent Registrations</h3>
+                    <a href="#" style="font-size: 0.8rem; color: var(--primary-light); text-decoration: none;">View All</a>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#001</td>
+                            <td>Chest X-Ray</td>
+                            <td><span class="badge badge-verified">Verified</span></td>
+                            <td class="text-muted">2m ago</td>
+                        </tr>
+                        <tr>
+                            <td>#002</td>
+                            <td>Brain MRI</td>
+                            <td><span class="badge badge-pending">Pending</span></td>
+                            <td class="text-muted">15m ago</td>
+                        </tr>
+                        <tr>
+                            <td>#003</td>
+                            <td>Knee X-Ray</td>
+                            <td><span class="badge badge-verified">Verified</span></td>
+                            <td class="text-muted">1h ago</td>
+                        </tr>
+                        <tr>
+                            <td>#004</td>
+                            <td>Chest CT</td>
+                            <td><span class="badge badge-verified">Verified</span></td>
+                            <td class="text-muted">3h ago</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Network Status Widgets -->
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+                <div class="glass-card" style="padding: 1.5rem;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem;">Network Health</h3>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                        <div style="flex: 1; height: 8px; background: var(--success); border-radius: 4px;"></div>
+                        <div style="flex: 1; height: 8px; background: var(--success); border-radius: 4px;"></div>
+                        <div style="flex: 1; height: 8px; background: var(--success); border-radius: 4px;"></div>
+                        <div style="flex: 1; height: 8px; background: var(--success); border-radius: 4px;"></div>
+                        <div style="flex: 1; height: 8px; background: var(--warning); border-radius: 4px;"></div>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">
+                        <strong>47/48 nodes</strong> online. Regional latency: 12ms.
+                    </p>
+                </div>
+
+                <div class="glass-card" style="padding: 1.5rem; border-color: rgba(123, 104, 238, 0.3);">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--blockchain);">Federated Learning</h3>
+                    <div style="display: flex; align-items: center; gap: 1.5rem;">
+                        <div style="width: 60px; height: 60px; border: 4px solid var(--blockchain); border-top-color: transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-weight: 800; font-size: 0.8rem;">127</span>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.85rem; font-weight: 700;">Global Round 127</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Current Accuracy: <strong>94.3%</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

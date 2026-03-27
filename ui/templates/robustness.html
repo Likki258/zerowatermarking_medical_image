@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px;">
+    
+    <div style="margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem;" class="animate-hero">
+        <a href="/" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-arrow-left"></i> Dashboard</a>
+        <h2 style="font-size: 2.25rem;"><i class="fas fa-dumbbell" style="color: var(--secondary); margin-right: 0.5rem;"></i> Robustness Testing Lab</h2>
+    </div>
+
+    <!-- Attack Input form -->
+    <div class="glass-card animate-hero delay-1" style="margin-bottom: 3rem;">
+        <h3 style="margin-bottom: 0.5rem;">Simulate Image Attacks</h3>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Test the mathematical integrity of your zero-watermark signature under common surgical/digital disruptions.</p>
+        
+        <form action="/process_robustness" method="POST" enctype="multipart/form-data" id="attack-form" onsubmit="showLoader('Applying Attack...', 'Simulating digital interference and recalculating Structural Similarity Metrics.')">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                
+                <label class="dropzone" for="robustness-image" style="padding: 2rem; display:block;">
+                    <div class="dropzone-icon" style="font-size: 2.5rem; color: var(--primary-light);"><i class="fas fa-file-image"></i></div>
+                    <p style="font-weight: 600; font-size: 1rem;">Original Medical Image</p>
+                    <p style="color: var(--text-muted); font-size: 0.75rem;">Drag and drop file here</p>
+                    <input type="file" name="image" id="robustness-image" accept="image/*" style="display: none;" required>
+                </label>
+                
+                <div style="display: flex; flex-direction: column; gap: 1rem; justify-content: center;">
+                    <label class="input-label" style="font-size: 1rem;"><i class="fas fa-bolt" style="color: var(--warning);"></i> Select Attack Vector</label>
+                    <select name="attack" class="input-control" style="font-size: 1.1rem; padding: 1.25rem;">
+                        <optgroup label="Noise Injection">
+                            <option value="gaussian_0.01">Gaussian Noise (Light | σ=0.01)</option>
+                            <option value="gaussian_0.05">Gaussian Noise (Medium | σ=0.05)</option>
+                            <option value="gaussian_0.1">Gaussian Noise (Heavy | σ=0.1)</option>
+                            <option value="salt_pepper_0.01">Salt & Pepper (Light | 1%)</option>
+                            <option value="salt_pepper_0.05">Salt & Pepper (Medium | 5%)</option>
+                            <option value="salt_pepper_0.1">Salt & Pepper (Heavy | 10%)</option>
+                        </optgroup>
+                        <optgroup label="Geometric Transformations">
+                            <option value="rotation_5">Geometric Rotation (5 degrees)</option>
+                            <option value="rotation_15">Geometric Rotation (15 degrees)</option>
+                            <option value="rotation_30">Geometric Rotation (30 degrees)</option>
+                        </optgroup>
+                        <optgroup label="Data Loss & Cropping">
+                            <option value="cropping_5">Anatomical Cropping (5%)</option>
+                            <option value="cropping_20">Anatomical Cropping (20%)</option>
+                            <option value="cropping_40">Anatomical Cropping (40%)</option>
+                        </optgroup>
+                        <optgroup label="Compression">
+                            <option value="jpeg_80">JPEG Compression (Light | Q=80)</option>
+                            <option value="jpeg_50">JPEG Compression (Medium | Q=50)</option>
+                            <option value="jpeg_20">JPEG Compression (Aggressive | Q=20)</option>
+                            <option value="jpeg_5">JPEG Compression (Destructive | Q=5)</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; justify-content: flex-end;">
+                <button type="submit" class="btn btn-primary" style="padding: 1.25rem 2.5rem; font-size: 1.1rem;">
+                    <i class="fas fa-play-circle" style="margin-right: 0.5rem;"></i> Apply Attack & Evaluate Damage
+                </button>
+            </div>
+        </form>
+    </div>
+
+    {% if result %}
+    <!-- Results -->
+    <div class="glass-card animate-hero delay-2">
+        <h3 style="margin-bottom: 2rem;"><i class="fas fa-chart-line" style="color: var(--success); margin-right: 0.5rem;"></i> Post-Attack Telemetry</h3>
+        
+        <div style="display: grid; grid-template-columns: 300px 1fr; gap: 3rem;">
+            
+            <div style="background: rgba(46, 38, 92, 0.02); border-radius: 1rem; padding: 1rem; text-align: center;">
+                <p class="input-label" style="text-align: center; margin-bottom: 0.5rem;">Attacked Output <br><span style="color:var(--text-muted); font-size: 0.8rem;">({{ result.attack_type|upper }})</span></p>
+                <img src="{{ url_for('static', filename='results/attacked.png') }}" style="width: 100%; border-radius: 0.75rem; border: 1px solid var(--glass-border);">
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div style="background: white; border: 1px solid var(--glass-border); border-radius: 1rem; padding: 1.5rem; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                    <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">PSNR (Peak Signal)</div>
+                    <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">{{ result.psnr|round(2) }} <span style="font-size: 1rem; color: var(--text-muted);">dB</span></div>
+                </div>
+                
+                <div style="background: white; border: 1px solid var(--glass-border); border-radius: 1rem; padding: 1.5rem; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                    <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">SSIM (Structure)</div>
+                    <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">{{ result.ssim|round(4) }}</div>
+                </div>
+
+                <div style="grid-column: span 2; background: {% if result.ber < 0.1 %}rgba(34, 197, 94, 0.1){% else %}rgba(239, 68, 68, 0.1){% endif %}; border-radius: 1rem; padding: 2rem; text-align: center; border: 1px dashed {% if result.ber < 0.1 %}var(--success){% else %}var(--danger){% endif %};">
+                    <div style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Bit Error Rate (BER) Signature Shift</div>
+                    <div style="font-size: 3rem; font-weight: 800; color: {% if result.ber < 0.1 %}var(--success){% else %}var(--danger){% endif %}; line-height: 1;">{{ result.ber|round(4) }}</div>
+                    
+                    <div style="margin-top: 1rem; font-weight: 600;">
+                        {% if result.ber < 0.1 %}
+                            <i class="fas fa-shield-alt"></i> Watermark survived! The extracted signature is nearly identical.
+                        {% else %}
+                            <i class="fas fa-exclamation-triangle"></i> Watermark severely degraded by the attack.
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

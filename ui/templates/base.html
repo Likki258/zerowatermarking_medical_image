@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediProof | Secure Medical Identity</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        #global-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);
+            z-index: 9999; display: none; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+        }
+        .loader-spinner {
+            width: 60px; height: 60px; border: 5px solid var(--glass-border);
+            border-top: 5px solid var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 2rem;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader-text { font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem; }
+        .loader-subtext { color: var(--text-muted); font-size: 1rem; }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div id="global-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text" id="loader-title">Processing...</div>
+        <div class="loader-subtext" id="loader-desc">Please hold while the cryptographic models run.</div>
+    </div>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">
+                <i class="fas fa-microscope"></i>
+            </div>
+            <span>MediProof</span>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+            <a href="/register" class="nav-link {% if active_page == 'register' %}active{% endif %}">Register Image</a>
+            <a href="/verify" class="nav-link {% if active_page == 'verify' %}active{% endif %}">Verify Portal</a>
+            <a href="/blockchain" class="nav-link {% if active_page == 'blockchain' %}active{% endif %}">Blockchain</a>
+            <a href="/robustness" class="nav-link {% if active_page == 'robustness' %}active{% endif %}">Robustness</a>
+            <a href="/federated" class="nav-link {% if active_page == 'federated' %}active{% endif %}">Federated AI</a>
+            <div style="width: 1px; height: 24px; background: var(--glass-border);"></div>
+            <a href="#" class="nav-link">Docs</a>
+            <a href="#" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.875rem;">Login</a>
+        </div>
+    </nav>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="container" style="padding-bottom: 0;">
+              {% for category, message in messages %}
+                <div class="status-banner {% if category == 'success' %}status-valid{% else %}status-invalid{% endif %}" style="margin-top: 1rem;">
+                  <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 2rem; margin-bottom: 2rem;">
+                <div class="nav-brand">
+                    <div class="brand-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <span>MediProof</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">About</a>
+                    <a href="#" class="nav-link">Privacy Policy</a>
+                    <a href="#" class="nav-link">Terms of Service</a>
+                    <a href="#" class="nav-link">Contact</a>
+                </div>
+            </div>
+            <p style="font-size: 0.875rem;">&copy; 2024 MediProof. Built with Zero-Watermark & Blockchain Technology for Global Healthcare.</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+    <script>
+        function showLoader(title, desc) {
+            if (title) document.getElementById('loader-title').innerText = title;
+            if (desc) document.getElementById('loader-desc').innerText = desc;
+            document.getElementById('global-loader').style.display = 'flex';
+        }
+        
+        // Drag and Drop & Filename Preview Support
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.dropzone').forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.style.borderColor = 'var(--primary)';
+                    zone.style.background = 'rgba(46, 38, 92, 0.05)';
+                });
+                zone.addEventListener('dragleave', e => {
+                    e.preventDefault();
+                    zone.style.borderColor = '';
+                    zone.style.background = '';
+                });
+                
+                const processFile = (file, dropzoneElement) => {
+                    if (file) {
+                        // Find the secondary <p> tag to display the filename
+                        const fileLabels = dropzoneElement.querySelectorAll('p');
+                        if(fileLabels.length >= 2) {
+                            fileLabels[1].innerHTML = `<i class="fas fa-check-circle" style="color:var(--success); margin-right:5px;"></i> ${file.name}`;
+                            fileLabels[1].style.color = 'var(--text-main)';
+                            fileLabels[1].style.fontWeight = '700';
+                        }
+                        dropzoneElement.style.borderColor = 'var(--primary)';
+                    }
+                };
+
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.style.background = '';
+                    if (e.dataTransfer.files.length) {
+                        const targetId = zone.getAttribute('for') || (zone.getAttribute('onclick') || '').match(/'([^']+)'/)?.[1];
+                        if (targetId) {
+                            const input = document.getElementById(targetId);
+                            if (input) {
+                                input.files = e.dataTransfer.files;
+                                processFile(e.dataTransfer.files[0], zone);
+                            }
+                        }
+                    }
+                });
+                
+                const targetId = zone.getAttribute('for') || (zone.getAttribute('onclick') || '').match(/'([^']+)'/)?.[1];
+                if (targetId) {
+                    const input = document.getElementById(targetId);
+                    if (input) {
+                        input.addEventListener('change', (e) => {
+                            if(e.target.files.length) processFile(e.target.files[0], zone);
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
